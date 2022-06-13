@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gateway
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  tls:
+    - hosts:
+        - edwin.com
+      secretName: edwin-tls
+  rules:
+    - host: edwin.com
+      http:
+        paths:
+          - path: "/rootHandler"
+            pathType: Prefix
+            backend:
+              service:
+                name: http-test
+                port:
+                  number: 80
+          - path: "/healthzHandler"
+            pathType: Prefix
+            backend:
+              service:
+                name: http-test
+                port:
+                  number: 80
