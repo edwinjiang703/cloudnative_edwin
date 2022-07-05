@@ -1,0 +1,17 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: httpsserver
+spec:
+  gateways:
+    - httpsserver
+  hosts:
+    - http-basic.edwin.io
+  http:
+    - match:
+        - port: 443
+      route:
+        - destination:
+            host: http-basic.securesvc.svc.cluster.local
+            port:
+              number: 80

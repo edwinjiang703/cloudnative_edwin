@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: https-poststart
+  labels:
+   app: httpstest      
+spec:
+  containers:
+    - name: https-poststart
+      image: edwindocker/edwin_istio
+      volumeMounts:
+       - name: http-con
+         mountPath: "/etc/envoy"
+         readOnly: true
+      resources:
+        limits:
+          cpu: "1"
+          memory: 200Mi
+        requests:
+          cpu: "1"
+          memory: 200Mi
+      env: 
+      - name: VERSION
+        valueFrom:
+          configMapKeyRef:
+            name: http-config
+            key: VERSION
+  volumes:
+  - name: http-con
+    configMap:
+      name: http-config       

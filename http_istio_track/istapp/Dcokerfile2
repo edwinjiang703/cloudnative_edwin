@@ -1,0 +1,6 @@
+FROM busybox
+COPY --from=edwin_http /httpserver/httpserver /httpserver/httpserver
+EXPOSE 8800
+ENV ENV local
+WORKDIR /httpserver/
+ENTRYPOINT ["./httpserver"]

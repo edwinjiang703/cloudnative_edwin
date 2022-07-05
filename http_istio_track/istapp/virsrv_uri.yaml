@@ -1,0 +1,32 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: httpsserver
+spec:
+  gateways:
+    - httpsserver
+  hosts:
+    - http-basic.edwin.io
+  http:
+    - match:
+      - port: 443 
+      - uri: 
+          exact: "/hc/"
+      rewrite:
+        uri: "/healthz/"		  
+      route:
+        - destination:
+            host: http-basic.securesvc.svc.cluster.local
+            port:
+              number: 80
+    - match:
+      - port: 443
+      - uri:
+          exact: "/root/"
+      rewrite:
+        uri: "/"
+      route:
+        - destination:
+            host: http-basic.securesvc.svc.cluster.local
+            port:
+              number: 80          
