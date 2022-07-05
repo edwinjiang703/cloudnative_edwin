@@ -32,7 +32,7 @@ func main() {
 	metrics.Register()
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", rootHandler)
-	mux.HandleFunc("/healthz/", rootHandler)
+	mux.HandleFunc("/healthz/", healthzHandler)
 	mux.HandleFunc("/debug/pprof/", pprof.Index)
 	mux.HandleFunc("/debug/pprof/profile", pprof.Profile)
 	mux.HandleFunc("/debug/pprof/symbol", pprof.Symbol)
@@ -48,7 +48,7 @@ func main() {
 }
 
 func healthzHandler(w http.ResponseWriter, r *http.Request) {
-	log.Println("IP is " + r.RemoteAddr + " HTTP Code is " + http.StatusText(200))
+	log.Println("IP is " + r.RemoteAddr + " HTTP Code health is " + http.StatusText(200))
 }
 
 func rootHandler(w http.ResponseWriter, r *http.Request) {
@@ -59,11 +59,12 @@ func rootHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("VERSION", os.Getenv("VERSION"))
 	ip := strings.Split(r.RemoteAddr, ":")[0]
 	fmt.Println(ip)
-	log.Println("IP is " + ip + " HTTP Code is " + http.StatusText(200))
+	log.Println("IP is " + ip + " HTTP Code root is " + http.StatusText(200))
 
 	timer := metrics.NewTimer()
 	defer timer.ObserveTotal()
 	randInt := rand.Intn(5000)
+
 	time.Sleep(time.Millisecond * time.Duration(randInt))
 	w.Write([]byte(fmt.Sprintf("<h1>%d<h1>", randInt)))
 }
